@@ -1,0 +1,8 @@
+librarian                  bin/
+librarian-hack             bin/librarian.d/
+librarian-version          bin/librarian.d/
+error                           bin/librarian.d/
+usage                           bin/librarian.d/
+msg                             bin/librarian.d/
+be-quiet                        bin/librarian.d/
+verbosity-isnt                  bin/librarian.d/
