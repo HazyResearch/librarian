@@ -8,7 +8,7 @@
 # TODO support Google Cloud Storage later
 from storage_s3 import upload
 from metadata_rds import insert_dataset
-import argparse,sys
+import argparse, sys, os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('local_path', nargs='+')
@@ -21,13 +21,19 @@ args = parser.parse_args()
 print >>sys.stderr, args
 
 # sanitize args
-# TODO ensure all args.local_path exists
+if not os.path.exists(args.local_path):
+    raise Exception('Invalid path')
 
 # TODO decide remote path from project and name
-remote_path = '...'
+# done inside storage_s3.upload
+project = args.project
+name = args.name
 
 # upload given files to AWS S3 or GCS
-upload(args.local_path, remote_path)
+remote_path = upload(args.local_path, project, name)
+
+if remote_path is None:
+    raise Exception('Something went wrong. Please try again.')
 
 # finally, insert a record into Librarian's database
 insert_dataset(remote_path=remote_path, **args)

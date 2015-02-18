@@ -102,8 +102,6 @@ case $Mode in
 
         updateURL="https://script.google.com/macros/s/$SHEETSDB_KEY_WRITE/exec"
         getURL "$updateURL" "${args[@]}"
-        
-        echo "$updateURL" "${args[@]}"
         ;;
 
     i|insert)
@@ -129,7 +127,6 @@ case $Mode in
 
         updateURL="https://script.google.com/macros/s/$SHEETSDB_KEY_WRITE/exec"
         getURL "$updateURL" "${args[@]}"
-        export DISPLAY=:0 && echo "$updateURL" "${args[@]}"
         ;;
 
     q|query)
