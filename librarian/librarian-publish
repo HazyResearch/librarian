@@ -30,7 +30,7 @@ project = args.project
 name = args.name
 
 # upload given files to AWS S3 or GCS
-remote_path = upload(args.local_path, project, name)
+remote_path = upload(args.local_path, project)
 
 if remote_path is None:
     raise Exception('Something went wrong. Please try again.')

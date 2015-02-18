@@ -4,11 +4,29 @@
 import boto
 import boto.s3.connection
 import os
+import datetime
 
-def upload(local_path, project, name):
-    # get the keys
-    access_key = os.getenv('AWS_KEY')
-    secret_key = os.getenv('AWS_SECRET_KEY')
+def list_files(directory):
+    ''' Generator to recursively list all the files in a directory. '''
+    if os.path.isfile(directory):
+        yield directory
+        raise StopIteration
+    for f in os.listdir(directory):
+        name = directory + '/' + f
+        if os.path.isfile(name):
+            yield name
+        elif os.path.isdir(name):
+            for f in list_files(name):
+                yield f
+
+
+def upload(local_path, project):
+    ''' Upload a file/directory to S3 path maintaining the directory
+        structure
+    '''
+    # get the s3 access keys
+    access_key = os.getenv('AWS_ACCESS_KEY_ID')
+    secret_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 
     conn = boto.s3.connection.S3Connection(
         aws_access_key_id = access_key,
@@ -16,28 +34,20 @@ def upload(local_path, project, name):
         calling_format = boto.s3.connection.OrdinaryCallingFormat(),
         )
     
-    # each project has its own bucket
-    bucket = conn.lookup(project)
-    if bucket is None:
-        print 'Error bucket was owned\n\n'
-        bucket = conn.create_bucket(project)
-        key = bucket.new_key(name)
-    else:
-        key = bucket.get_key(name)
-        i = 0
-        while key is not None:
-            i += 1
-            key = bucket.get_key(name+'_'+str(i))
-        key = bucket.new_key(name+'_'+str(i))
-    # check if a file with the same name exists. If yes, generate a new name
-    # Can replace this scheme by appending a random string to the end if a large
-    # number of files is expected
+    # get the storage bucket
+    bucket = conn.get_bucket('librarian_upload_test')
     
-        
-    key.set_contents_from_filename(local_path)
-    key.set_acl('public-read')
-    url = key.generate_url(expires_in=0, query_auth=False)
-    return url
+    # make a separate directory for the installation
+    store_dir = '_'.join([project] + str(datetime.datetime.now()).split())
+    
+    # Upload all the files and directories pointed to by local_path
+    for f in list_files(local_path):
+        key = bucket.new_key(store_dir + f[len(local_path):])
+        key.set_contents_from_filename(f)
+        key.set_acl('public-read')
+        url = key.generate_url(expires_in=0, query_auth=False)
+    # return the location of directory within the bucket containing the data
+    return store_dir
     
 if __name__=='__main__':
-    print upload('/home/abhinav/librarian/librarian/boto_test.py', 'arastogi@stanford.edu', 'test1')
+    print upload('/home/abhinav/Dropbox/github/librarian/librarian', 'folder_test')
