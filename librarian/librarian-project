@@ -6,23 +6,28 @@
 # > librarian project list
 #
 
-from metadata_rds import insert_project,enumerate_project
-import argparse,sys
+from database_sheetsdb import insert, query
+import argparse, sys, datetime
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 group.add_argument('--add', '-a', metavar='NAME')
 group.add_argument('--list', '-l', action='store_true')
-parser.add_argument('--owner', required=True)
-parser.add_argument('--comment')
+parser.add_argument('--owner')
+parser.add_argument('--comments')
 args = parser.parse_args()
 
-print >>sys.stderr, args
-
-# TODO
 if args.list:
-    print enumerate_project()
+    columns, rows = query('Engagements')
+    # TODO pretty print these
+    print columns
+    print rows
 
 else:
-    print insert_project()
+    insert('Engagements',
+            project=args.add,
+            owner=args.owner,
+            comments=args.comments,
+            date_started=datetime.date.today())
+
 
