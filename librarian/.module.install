@@ -2,3 +2,5 @@ librarian-publish                       bin/librarian.d/
 librarian-project                       bin/librarian.d/
 metadata_rds.py                         bin/librarian.d/
 storage_s3.py                           bin/librarian.d/
+
+sheetsdb                                bin/librarian.d/
