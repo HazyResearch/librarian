@@ -13,6 +13,7 @@ from urllib2 import urlopen
 from subprocess import call
 import json
 import re
+import string
 
 read_key = os.getenv('SHEETSDB_KEY_READ')
 
@@ -26,6 +27,22 @@ LIBRARIAN_SCHEMA = {
 'ActivityLog':
 ['action_id', 'action_type', 'date', 'description', 'engagement_id', 'incoming_id', 'outoging_id']
 }
+
+def colname(i):
+    if i < 26:
+        return chr(ord('A') + i)
+    else:
+        colname(i / 26) + colname(i % 26)
+
+def col_names(num):
+    for c1 in [''] + list(string.ascii_uppercase):
+        for c2 in list(string.ascii_uppercase):
+            if num > 0:
+                yield c1 + c2
+                num -= 1
+            else:
+                raise StopIteration
+            
 
 # Insert into sheet
 def insert(table, **kwargs):
@@ -43,16 +60,17 @@ def insert(table, **kwargs):
 # Query from sheet based on an attribute
 def query(table, **kwargs):
     row = dict(kwargs)
+    schema = LIBRARIAN_SCHEMA[table]
+    col_dict = dict(zip(schema, col_names(len(schema))))
     params = []
     for k, v in row.iteritems():
-        params.append(k + '%3D' + repr(v))
+        params.append(col_dict[k] + '%3D' + repr(v))
     query = 'select%20*'
     if len(params) > 0:
         query += '%20where%20' + '%20and%20'.join(params)
     url = 'https://docs.google.com/spreadsheets/d/' + read_key + \
         '/gviz/tq?tq=' + query + '&sheet=' + table
     resp = urlopen(url)
-    print url
     res = resp.read()[39:-2]
     # Parse the javascript dates
     hasDate = re.search(r'new Date\([0-9,]*\)', res)
@@ -99,4 +117,4 @@ if __name__=='__main__':
     # add_Incoming(0, 'small sample of backpage', 0, 0, 0, 'Sept-5-2014', 'MD5...', 's3:dd-incoming/memex/small_sample_of_backpage/v_0000/data.tsv', 'more data expected later')
     # add_Outgoing(0, 'Memex ht basic attrs', 0, 0, 'Nov-30-2014', 'MD5:...', 's3:dd-outgoing/memex/memex_ht_basic_attrs/v_0000/data_0000.tsv', 's3:dd-outgoing/memex/memex_ht_basic_attrs/v_0000/report.pdf', 'First shipment!  This reflects input backpage data from the large-backpage-crawl up through Nov-1-2014')
     # add_ActivityLog(0, 'CREATE', 'Jan-20-2015', 'Add new engagement', 3, 'NULL', 'NULL')
-    print query('ActivityLog', A=0)
+    print query('ActivityLog', action_id=1)
