@@ -50,4 +50,4 @@ def upload(local_path, project):
     return store_dir
     
 if __name__=='__main__':
-    print upload('/home/abhinav/Dropbox/github/librarian/librarian', 'folder_test')
+    print upload('/home/abhinav/Dropbox/github/librarian', 'folder_test')

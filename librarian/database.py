@@ -16,9 +16,24 @@ import re
 
 read_key = os.getenv('SHEETSDB_KEY_READ')
 
+LIBRARIAN_SCHEMA = {
+'Engagements':
+['id', 'name', 'date_originated', 'owner', 'comments'], 
+'IncomingData':
+['engagement_id', 'name, version', 'part', 'incoming_id', 'date_ingested', 'checksum', 's3path', 'comments'],
+'OutgoingData':
+['engagement_id', 'name', 'version', 'outgoing_id', 'date_produced', 'checksum', 's3path', 'published_report_s3path', 'comments'],
+'ActivityLog':
+['action_id', 'action_type', 'date', 'description', 'engagement_id', 'incoming_id', 'outoging_id']
+}
+
 # Insert into sheet
 def insert(table, **kwargs):
     row = dict(kwargs)
+    if table not in LIBRARIAN_SCHEMA:
+        raise Exception("Table not found.")
+    if not set(row.keys()) <= set(LIBRARIAN_SCHEMA[table]):
+        raise Exception("Schema doesn't match. Insert aborted.")
     cmd = ['./sheetsdb', 'insert', table]
     for k, v in row.iteritems():
         cmd.append(k + '=' + str(v))
@@ -31,13 +46,14 @@ def query(table, **kwargs):
     params = []
     for k, v in row.iteritems():
         params.append(k + '%3D' + repr(v))
-    query = 'select%20*' 
-    query += '%20where%20' + '%20and%20'.join(params)
+    query = 'select%20*'
+    if len(params) > 0:
+        query += '%20where%20' + '%20and%20'.join(params)
     url = 'https://docs.google.com/spreadsheets/d/' + read_key + \
         '/gviz/tq?tq=' + query + '&sheet=' + table
     resp = urlopen(url)
+    print url
     res = resp.read()[39:-2]
-    print res
     # Parse the javascript dates
     hasDate = re.search(r'new Date\([0-9,]*\)', res)
     while hasDate:
@@ -48,7 +64,7 @@ def query(table, **kwargs):
     # load the json object
     res = json.loads(res)
     cols = map(lambda x:x[u'label'], res[u'table'][u'cols'])
-    rows = [map(lambda x:x[u'v'], r[u'c']) for r in res[u'table'][u'rows']]
+    rows = [map(lambda x:x[u'v'] if x else None, r[u'c']) for r in res[u'table'][u'rows']]
     return cols, rows
     
 # id, name, date_originated, owner, comments
