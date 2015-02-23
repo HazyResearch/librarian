@@ -20,7 +20,7 @@ def list_files(directory):
                 yield f
 
 
-def upload(local_path, project):
+def upload(local_paths, project, dataset, timestamp):
     ''' Upload a file/directory to S3 path maintaining the directory
         structure
     '''
@@ -38,16 +38,21 @@ def upload(local_path, project):
     bucket = conn.get_bucket('librarian_upload_test')
     
     # make a separate directory for the installation
-    store_dir = '_'.join([project] + str(datetime.datetime.now()).split())
+    store_dir = '/'.join([project, dataset, timestamp])
+    urls = []
+    checksums = []
     
     # Upload all the files and directories pointed to by local_path
-    for f in list_files(local_path):
-        key = bucket.new_key(store_dir + f[len(local_path):])
-        key.set_contents_from_filename(f)
-        key.set_acl('public-read')
-        url = key.generate_url(expires_in=0, query_auth=False)
-    # return the location of directory within the bucket containing the data
-    return store_dir
+    for local_path in local_paths:
+        for f in list_files(local_path):
+            key = bucket.new_key(store_dir + f[len(local_path):])
+            key.set_contents_from_filename(f)
+            key.set_acl('public-read')
+            url = key.generate_url(expires_in=0, query_auth=False)
+            urls.append(url)
+            checksums.append('') # TODO
+    # return the urls and checksums for uploaded objects
+    return urls, checksums
     
 if __name__=='__main__':
     print upload('/home/abhinav/Dropbox/github/librarian', 'folder_test')
