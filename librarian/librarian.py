@@ -92,17 +92,19 @@ def get(fname, project):
 
 
 def projectLs():
-  """List all Librarian files for a single project"""
+  """List all Librarian projects"""
   checkMetadata()  
-  dbconn.projectLs()
-  print "List all projects"
+  print "List of all known projects:"
+  for name in dbconn.projectLs():
+    print name
 
 
 def ls(projectname):
-  """List all Librarian projects"""
+  """List all Librarian files for a single project"""
   checkMetadata()  
-  dbconn.ls(projectname)
-  print "List all files in a project called", projectname
+  print "List of all datasets in a project named", projectname
+  for name, version, urls in dbconn.ls(projectname):
+    print name, version, urls
 
 
 #
@@ -145,7 +147,7 @@ def main():
     elif args.pls:
       projectLs()
     elif args.ls is not None:
-      ls(args.ls)
+      ls(args.ls[0])
     elif args.put is not None and len(args.put) > 0:
       put(args.put[0], args.put[1], args.put[2])
     elif args.get is not None and len(args.get) > 0:

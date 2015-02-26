@@ -51,18 +51,18 @@ class DBConn:
 
     def datasetQueryFor(table):
         return '''
-        select ds.name, ds.version
+        select ds.name, ds.version, ds.urls
           from %s ds
           join Engagements on ds.project = Engagements.id
          where Engagements.name = %%s
         ''' % (table)
     try:
       for _ in xrange(c.execute(datasetQueryFor('IncomingData') +
-                    ' union ' + datasetQueryFor('OutgoingData'),
-                    (project, project))):
-        yield c.fetchone()[0]
-    except:
-      raise Exception('Database not available')
+                                ' union ' + datasetQueryFor('OutgoingData'),
+                                (project, project))):
+        yield c.fetchone()
+    except Exception as e:
+      raise Exception('Database not available', e)
     c.close()
     
   def createProject(self, project, comments=''):
