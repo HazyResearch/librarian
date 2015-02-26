@@ -12,7 +12,7 @@ Freebase dumps.
 It should NOT be used to hold temporary or working files.
 """
 
-import argparse, boto, json, os.path, MySQLdb
+import argparse, boto, json, os.path
 
 ##
 # GLOBALS
@@ -152,14 +152,3 @@ if __name__ == "__main__":
       parser.print_help()
   except ConfigError as e:
     print e.msg
-    
-    
-
-    
-
-  
-
-  
-
-
-  
