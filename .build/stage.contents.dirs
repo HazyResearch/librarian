@@ -1,0 +1,2 @@
+./depends/bundled\(/.*\)\?$
+./depends/runtime\(/.*\)\?$
