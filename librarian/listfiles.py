@@ -12,7 +12,6 @@ def list_files(directory):
             for f in list_files(name):
                 yield f
             
-            
-for f in list_files('/home/abhinav/Dropbox/github/librarian'):
-    print f[len('/home/abhinav/Dropbox/github/librarian'):]
-            
+if __name__ == '__main__':
+    for f in list_files(os.getcwd()):
+        print f[len(os.getcwd()):]
