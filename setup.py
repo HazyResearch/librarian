@@ -14,7 +14,7 @@ setup(name="librarian",
       author="Jaeho, Abhinav, Mike",
       author_email="michael.cafarella@gmail.com",
       packages=["librarian"],
-      install_requires=["boto", "MySQLdb"],
+      install_requires=["boto", "MySQL-python"],
       #packages=["boto", "distutils"],
       )
 
