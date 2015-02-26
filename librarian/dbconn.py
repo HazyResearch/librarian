@@ -19,22 +19,21 @@ Schema:
 
 import MySQLdb, datetime
 
-HOST = "librarian-test-abhirast.cfovowditnjo.us-east-1.rds.amazonaws.com"
-
 class DBConn:
   """Represents a live database conn with Librarian-specific operators."""
 
-  def __init__(self, username, password, port = 3306):
+  def __init__(self, username, password, host, port = 3306):
     self.user = username
     self.pswd = password
-    self.port = port
+    self.host = host
+    self.port = int(port)
     try:
-        self.db = MySQLdb.connect(host=HOST, port=self.port, user=self.user,
+        self.db = MySQLdb.connect(host=self.host, port=self.port, user=self.user,
                                     passwd=self.pswd, db='librarian')
     except:
         raise Exception('Invalid credentials for librarian database')
   
-  def ls(self):
+  def projectLs(self):
     ''' returns a generator listing all librarian projects '''
     c = self.db.cursor()
     try:
@@ -44,7 +43,7 @@ class DBConn:
       raise Exception('Database not available')
     c.close()
     
-  def projectLs(self, project):
+  def ls(self, project):
     ''' returns a generator listing all datasets and their versions in
         a librarian project. The generator yield a (name, version) tuple.
     '''
