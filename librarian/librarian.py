@@ -110,7 +110,7 @@ def ls(projectname):
 #
 # main()
 #
-if __name__ == "__main__":
+def main():
   usage = "usage: %prog [options]"
 
   # Setup cmdline parsing
@@ -152,3 +152,6 @@ if __name__ == "__main__":
       parser.print_help()
   except ConfigError as e:
     print e.msg
+
+if __name__ == "__main__":
+  main()
