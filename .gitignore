@@ -3,18 +3,4 @@
 .#*
 .DS_Store
 
-.build
-/@prefix@
-/*.app
-/librarian-*.tar.gz
-/librarian-*.sh
-/librarian-*.dmg
-
-//*
-!//*.depends
-!//*.commands
-!//*.paths
-!//*.test.sh
-!//*.sh
-!//*.txt
-
+*.pyc
