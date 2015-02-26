@@ -7,12 +7,12 @@ is not designed to hold raw content, just the file names, version
 history, checksums, etc.
 
 Schema:
-'Engagements': ['project', 'date_started', 'owner', 'comments'], 
+'Engagements': ['id', 'name', 'date_started', 'owner', 'comments'], 
 
-'IncomingData': ['project', 'dataset', 'version', 'timestamp', 
+'IncomingData': ['id', 'project', 'name', 'version', 'timestamp', 
       'urls', 'checksums', 'metadata_url', 'comments', 'user', 'hostname']
 
-'OutgoingData': ['project', 'dataset', 'version', 'timestamp', 
+'OutgoingData': ['id', 'project', 'name', 'version', 'timestamp', 
       'urls', 'checksums', 'metadata_url', 'comments', 'user', 'hostname']
 
 """
@@ -37,9 +37,8 @@ class DBConn:
   def ls(self):
     ''' returns a generator listing all librarian projects '''
     c = self.db.cursor()
-    query = 'select project from Engagements'
     try:
-      for _ in xrange(c.execute(query)):
+      for _ in xrange(c.execute( '''select name from Engagements''')):
         yield c.fetchone()[0]
     except:
       raise Exception('Database not available')
@@ -47,18 +46,21 @@ class DBConn:
     
   def projectLs(self, project):
     ''' returns a generator listing all datasets and their versions in
-        a librarian project. The generator yield a (dataset, version) tuple.
+        a librarian project. The generator yield a (name, version) tuple.
     '''
     c = self.db.cursor()
-    
-    inQuery = 'select dataset, version from IncomingData where project=' \
-        + repr(project)
-    outQuery = 'select dataset,version from OutgoingData where project=' \
-        + repr(project)
-    query = inQuery + ' UNION ' + outQuery
-    
+
+    def datasetQueryFor(table):
+        return '''
+        select ds.name, ds.version
+          from %s ds
+          join Engagements on ds.project = Engagements.id
+         where Engagements.name = %%s
+        ''' % (table)
     try:
-      for _ in xrange(c.execute(query)):
+      for _ in xrange(c.execute(datasetQueryFor('IncomingData') +
+                    ' union ' + datasetQueryFor('OutgoingData'),
+                    (project, project))):
         yield c.fetchone()[0]
     except:
       raise Exception('Database not available')
@@ -73,7 +75,7 @@ class DBConn:
     c = self.db.cursor()
     date = datetime.date.today()
     owner = self.user
-    command = '''insert into Engagements values (%s, %s, %s, %s)'''
-    c.execute(command, (project, date, owner, comments))
+    c.execute('''insert into Engagements values (%s, %s, %s, %s)''',
+            (project, date, owner, comments))
     c.close()
     
