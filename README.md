@@ -41,7 +41,7 @@ Here are a few examples of how to use Librarian.
 
 You can use Librarian to view the data status of current projects:
 
-`
+```
 $ librarian.py --ls
 
 genomics	feng	created 2015-04-02 05:54:26.511870	updated 2015-04-02 05:54:26.511877
@@ -203,7 +203,7 @@ Total bytes transferred: 110371 total size: 110371
 
 Copying terrifying.txt from Librarian to ./localDataShipmentDir
 Total bytes transferred: 119767 total size: 119767
-
+```
 
 
 
