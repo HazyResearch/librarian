@@ -546,10 +546,10 @@ if __name__ == "__main__":
   parser.add_argument("--ls", action="store_true", default=False, help="List all projects")
   parser.add_argument("--examine", nargs=1, metavar=("librarianobj"), help="Examine a given Librarian object")  
   parser.add_argument("--comments", action="store_true", default=False, help="Print comments?")  
-  parser.add_argument("--cp", nargs=2, metavar=("librariandir, localdir"), help="Copy data from a Librarian directory to a local dir")    
+  parser.add_argument("--cp", nargs=2, metavar=("librariandir", "localdir"), help="Copy data from a Librarian directory to a local dir")    
   parser.add_argument("--createproj", nargs=2, metavar=("name", "owner"), help="Create a new project")
-  parser.add_argument("--ingest", nargs=3, metavar=("proj, name, localdir"), help="Create new ingest directory in a Librarian project")
-  parser.add_argument("--outgest", nargs=3, metavar=("proj, name, localdir"), help="Create new outgest directory in a Librarian project")  
+  parser.add_argument("--ingest", nargs=3, metavar=("proj", "name", "localdir"), help="Create new ingest directory in a Librarian project")
+  parser.add_argument("--outgest", nargs=3, metavar=("proj", "name", "localdir"), help="Create new outgest directory in a Librarian project")  
   parser.add_argument("--version", action="version", version="%(prog)s 0.1")
 
   # Invoke either get() or put()
