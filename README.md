@@ -42,12 +42,12 @@ Here are a few examples of how to use Librarian.
 You can use Librarian to view the data status of current projects:
 
 `
-> librarian.py --ls
+$ librarian.py --ls
 
 genomics	feng	created 2015-04-02 05:54:26.511870	updated 2015-04-02 05:54:26.511877
 toshiba	mjc	created 2015-04-02 05:54:37.792339	updated 2015-04-02 05:54:37.792347
 
-> librarian.py --examine toshiba --comments
+$ librarian.py --examine toshiba --comments
 name: toshiba
 owner: mjc
 created: 2015-04-02 05:54:37.792339
@@ -59,13 +59,13 @@ There are 0 ingested directories
 There are 0 outgested directories
 
   
-> librarian.py --createproj memex mjc
+$ librarian.py --createproj memex mjc
 Please describe the project
-> This is the DARPA Memex project
+$ This is the DARPA Memex project
 Created project memex
 
 
-> librarian.py --examine memex --comments
+$ librarian.py --examine memex --comments
 name: memex
 owner: mjc
 created: 2015-04-02 05:39:45.057358
@@ -76,7 +76,7 @@ There are 0 ingested directories
 
 There are 0 outgested directories
 
-> librarian.py --ingest memex data-drop-1 ./prepDirForMemexDataDrop
+$ librarian.py --ingest memex data-drop-1 ./prepDirForMemexDataDrop
 Ingesting data for project memex under directory data-drop-1
 Processing 2 files from ./prepDirForMemexDataDrop
 How was this data obtained?
@@ -84,13 +84,13 @@ How was this data obtained?
 [1]  Data is result of SQL query against data partner database.
 [2]  Data is result of running processing program over a raw partner file.
 [3]  Data comes from some other source
-> 1
+$ 1
 Describe how data was obtained from partner (e.g., URL or scp path)
-> We grabbed it from the IST standard Memex MySQL database, described in the Memex Wiki.
+$ We grabbed it from the IST standard Memex MySQL database, described in the Memex Wiki.
 Total bytes transferred: 191739 total size: 191739
 
 
-> librarian.py --examine memex
+$ librarian.py --examine memex
 name: memex
 owner: mjc
 created: 2015-04-02 05:39:45.057358
@@ -100,7 +100,7 @@ comments: This is the DARPA Memex project
 There are 1 ingested directories
 data-drop-1	ingest	2015-04-02 06:01:39.727159	2015-04-02 06:01:39.727166	665cf577a85b4bafb2892e9e69970d82
 
-> librarian.py --examine memex --comments
+$ librarian.py --examine memex --comments
 name: memex
 owner: mjc
 created: 2015-04-02 05:39:45.057358
@@ -117,7 +117,7 @@ We grabbed it from the IST standard Memex MySQL database, described in the Memex
 There are 0 outgested directories
 
 
-> librarian.py --examine memex:data-drop-1
+$ librarian.py --examine memex:data-drop-1
 name: memex
 owner: mjc
 created: 2015-04-02 05:39:45.057358
@@ -128,9 +128,9 @@ data-drop-1	ingest	2015-04-02 06:01:39.727159	2015-04-02 06:01:39.727166	665cf57
 	terrifying.txt	119767	2d3b2ac7becee4ec477e4df512482d71
 
 
-> mv forgottenHorribleMemexFile.txt prepDirForMemexDataDrop/
+$ mv forgottenHorribleMemexFile.txt prepDirForMemexDataDrop/
 
-> librarian.py --ingest memex data-drop-1 ./prepDirForMemexDataDrop
+$ librarian.py --ingest memex data-drop-1 ./prepDirForMemexDataDrop
 Ingesting data for project memex under directory data-drop-1
 Processing 3 files from ./prepDirForMemexDataDrop
 How was this data obtained?
@@ -138,12 +138,12 @@ How was this data obtained?
 [1]  Data is result of SQL query against data partner database.
 [2]  Data is result of running processing program over a raw partner file.
 [3]  Data comes from some other source
-> 1
+$ 1
 Describe how data was obtained from partner (e.g., URL or scp path)
-> This comes from the IST SQL database from the Memex wiki.  This update includes a file I initially forgot to grab 
+$ This comes from the IST SQL database from the Memex wiki.  This update includes a file I initially forgot to grab 
 
 
-> librarian.py --examine memex:data-drop-1
+$ librarian.py --examine memex:data-drop-1
 name: memex
 owner: mjc
 created: 2015-04-02 05:39:45.057358
@@ -154,7 +154,7 @@ data-drop-1	ingest	2015-04-02 06:01:39.727159	2015-04-02 06:06:58.596147	c368c90
 	forgottenHorribleMemexFile.txt	110371	26595cbeef505b27fbbe78a767285e5a
 	terrifying.txt	119767	2d3b2ac7becee4ec477e4df512482d71
 
-> librarian.py --examine memex:data-drop-1:all
+$ librarian.py --examine memex:data-drop-1:all
 name: memex
 owner: mjc
 created: 2015-04-02 05:39:45.057358
@@ -169,7 +169,7 @@ data-drop-1	ingest	2015-04-02 06:01:39.727159	2015-04-02 06:06:58.596147	c368c90
 	terrifying.txt	119767	2d3b2ac7becee4ec477e4df512482d71
 
 
-> librarian.py --examine memex:data-drop-1:all --comments
+$ librarian.py --examine memex:data-drop-1:all --comments
 name: memex
 owner: mjc
 created: 2015-04-02 05:39:45.057358
@@ -192,7 +192,7 @@ This comes from the IST SQL database from the Memex wiki.  This update includes 
 	terrifying.txt	119767	2d3b2ac7becee4ec477e4df512482d71
 
 
-> librarian.py --cp memex:data-drop-1 ./localDataShipmentDir
+$ librarian.py --cp memex:data-drop-1 ./localDataShipmentDir
 Copying data from following Librarian directory:
 data-drop-1	ingest	2015-04-02 06:01:39.727159	2015-04-02 06:06:58.596147	c368c90c933641a0a4c5fe06cf987d89
 Copying disturbing.txt from Librarian to ./localDataShipmentDir
